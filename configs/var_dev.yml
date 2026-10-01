@@ -1,0 +1,28 @@
+environment: dev
+
+catalog_name: "ct_oil_gas"
+bronze_schema_name: "sc_bronze"
+bronze_table_name: "oil_gas_transactions"
+silver_schema_name: "sc_silver"
+silver_table_name: "oil_gas_transactions"
+gold_schema_name: "sc_gold"
+gold_table_name: "daily_demand"
+gold_feature_table_name: "feature_demand"
+fe_table_name: "feature_demand"
+feature_table_name: "daily_demand_features"
+eval_split_table_name: "demand_eval_split"
+demand_labels_table_name: "daily_demand_labels"
+file_path : "/Volumes/ct_oil_gas/sc_bronze/v1/raw_data/supply_chain_dataset.xlsx"
+
+drop_cols:
+  - "source_system"
+  - "operation_type"
+
+
+xp_name: "exp_daily_oil_gas_demand"
+current_user: "abuhuzaifakurla@gmail.com"
+RANDOM_STATE: 42
+run_name: "daily_demand_xgb"
+artifact_name: "daily_oil_gas_demand_model"
+model_name: "ct_oil_gas.sc_gold.daily_oil_gas_demand_xg_model"
+model_suffix: "daily_oil_gas_demand_xg_model"

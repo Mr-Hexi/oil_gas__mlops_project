@@ -1,0 +1,43 @@
+resources:
+  jobs:
+    Oil_Gas_Orchestration:
+      name: Oil_Gas_Orchestration
+      tasks:
+        - task_key: Bronze_to_gold
+          spark_python_task:
+            python_file: ../src/DE/raw_to_gold_pipeline.py
+          environment_key: Default
+
+        - task_key: Feature_eng_to_ML_training
+          depends_on:
+            - task_key: Bronze_to_gold
+          spark_python_task:
+            python_file: ../src/ML/feature_eng_to_ml_training_pipeline.py
+          environment_key: Feature_eng_to_ML_training_environment
+
+        - task_key: Model_Registering_to_Champion_Promotion
+          depends_on:
+            - task_key: Feature_eng_to_ML_training
+          spark_python_task:
+            python_file: ../src/ML/model_registry_to_champion_pipeline.py
+          environment_key: Model_Registering_to_Champion_Promotion_environment
+
+      queue:
+        enabled: true
+
+      environments:
+        - environment_key: Default
+          spec:
+            environment_version: "6"
+        - environment_key: Feature_eng_to_ML_training_environment
+          spec:
+            environment_version: "6"
+            dependencies:
+              - -r ${workspace.file_path}/requirements.txt
+        - environment_key: Model_Registering_to_Champion_Promotion_environment
+          spec:
+            environment_version: "6"
+            dependencies:
+              - -r ${workspace.file_path}/requirements.txt
+
+      performance_target: PERFORMANCE_OPTIMIZED
